@@ -6,7 +6,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-CORS_ALLOW_ORIGINS=['http://localhost, http://localhost:4010, http://localhost:8765']
+CORS_ALLOW_ORIGINS=['http://localhost, http://localhost:8765']
 
 class FastAPI_Wrapper(FastAPI):
 

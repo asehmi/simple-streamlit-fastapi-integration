@@ -1,4 +1,4 @@
-import os
+import os, sys
 import time
 import streamlit as st
 import requests
@@ -9,18 +9,18 @@ API_HOST='localhost'
 API_PORT=8000
 API_BASE_URL='http://localhost:8000'
 
-from utils import SessionState
 # Session State variables:
-state = SessionState.get(
-    API_APP = None,
-    API_STARTED=False,
-)
+state = st.session_state
+if 'API_APP' not in state:
+    state.API_APP = None
+if 'API_STARTED' not in state:
+    state.API_STARTED=False
 
 # --------------------------------------------------------------------------------
 
 # NOTE: Design point... only main() is allowed to mutate state. All supporting functions should not mutate state.
 def main():
-    st.title('LR Process Manager')
+    st.title('Long Running Process Manager')
 
     # RUN LRP
     if not state.API_STARTED:
@@ -36,7 +36,7 @@ def main():
                 proc.wait()
                 return proc
 
-            job = ['python', os.path.join('./', 'lrp_bootstrapper.py'), API_HOST, str(API_PORT)]
+            job = [f'{sys.executable}', os.path.join('.', 'lrp_bootstrapper.py'), API_HOST, str(API_PORT)]
 
             # server thread will remain active as long as streamlit thread is running, or is manually shutdown
             thread = threading.Thread(name='FastAPI-LRP-Bootstrapper', target=run, args=(job,), daemon=True)
@@ -69,8 +69,8 @@ def main():
 def sidebar():
     # ABOUT
     st.sidebar.header('About')
-    st.sidebar.info('FastAPI Wrapper to run and stop a LRP!\n\n' + \
-        '(c) 2021. Oxford Economics Ltd. All rights reserved.')
+    st.sidebar.info('FastAPI Wrapper to run and stop a long running process (LRP)!\n\n' + \
+        '(c) 2022. CloudOpti Ltd. All rights reserved.')
     st.sidebar.markdown('---')
 
 
