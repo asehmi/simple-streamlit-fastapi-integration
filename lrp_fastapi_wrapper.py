@@ -2,11 +2,16 @@
 Contains the main `FastAPI_Wrapper` class, which wraps `FastAPI`.
 """
 import os
+import time
+import datetime as dt
+import threading
+import psutil
 
 from fastapi import FastAPI
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 
-CORS_ALLOW_ORIGINS=['http://localhost, http://localhost:8765']
+CORS_ALLOW_ORIGINS=['http://localhost', 'http://localhost:5000', 'http://localhost:8765', 'http://127.0.0.1:5000']
 
 class FastAPI_Wrapper(FastAPI):
 
@@ -31,9 +36,6 @@ class FastAPI_Wrapper(FastAPI):
         # Add shutdown event (would only be of any use in a multi-process, not multi-thread situation)
         @self.get("/shutdown")
         async def shutdown():
-            import time
-            import psutil
-            import threading
 
             def suicide():
                 time.sleep(1)
@@ -46,15 +48,14 @@ class FastAPI_Wrapper(FastAPI):
 
         @self.get("/run")
         async def run():
-            import time
-            from datetime import datetime
-            import threading
-
             # !! RUN YOUR LONG-RUNNING PROCESS HERE !!
             def lrp_runner():
                 while True:
                     time.sleep(10)
-                    print(f'>>> LRP Report @ {datetime.now()} <<<')
+                    print(f'>>> LRP Report @ {dt.datetime.now()} <<<')
 
             threading.Thread(target=lrp_runner, daemon=True).start()
 
+        @self.get("/hello")
+        async def hello():
+            return Response(f'>>> Hello @ {dt.datetime.now()} <<<', status_code=200)

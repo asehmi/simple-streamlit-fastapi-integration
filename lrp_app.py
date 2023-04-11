@@ -63,7 +63,11 @@ def main():
         components.iframe(f'http://{API_HOST}:{API_PORT}/docs', height=600, scrolling=True)
         components.iframe(f'http://{API_HOST}:{API_PORT}/redoc', height=600, scrolling=True)
 
-        if st.button('\U0001F525 Shutdown LRP'):
+        if st.button('👋 Hello'):
+            resp = requests.get(f'{API_BASE_URL}/hello')
+            st.write(resp.text)
+
+        if st.button('🔥 Shutdown LRP'):
             requests.get(f'{API_BASE_URL}/shutdown')
 
             state.API_STARTED = False
