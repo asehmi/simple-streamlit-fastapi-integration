@@ -1,3 +1,4 @@
 streamlit>=1.13.0
 uvicorn
 fastapi
+psutil
