@@ -1,13 +1,14 @@
 import os, sys
 import time
-import streamlit as st
 import requests
+import streamlit as st
+import streamlit.components.v1 as components
 
 # --------------------------------------------------------------------------------
 
 API_HOST='localhost'
-API_PORT=8000
-API_BASE_URL='http://localhost:8000'
+API_PORT=5000
+API_BASE_URL=f'http://{API_HOST}:{API_PORT}'
 
 # Session State variables:
 state = st.session_state
@@ -54,10 +55,13 @@ def main():
     if state.API_STARTED:
         st.markdown(f'''
             The LRP API is running. If you\'d like to terminate the LRP click the button below.
-            ### API docs
+            ### Links to API docs (local environment only!)
             - [**http://{API_HOST}:{API_PORT}/docs**](http://{API_HOST}:{API_PORT}/docs)
             - [**http://{API_HOST}:{API_PORT}/redoc**](http://{API_HOST}:{API_PORT}/redoc)
         ''')
+        st.markdown('### Embedded API docs (local environment only!)')
+        components.iframe(f'http://{API_HOST}:{API_PORT}/docs', height=600, scrolling=True)
+        components.iframe(f'http://{API_HOST}:{API_PORT}/redoc', height=600, scrolling=True)
 
         if st.button('\U0001F525 Shutdown LRP'):
             requests.get(f'{API_BASE_URL}/shutdown')
@@ -70,7 +74,7 @@ def sidebar():
     # ABOUT
     st.sidebar.header('About')
     st.sidebar.info('FastAPI Wrapper to run and stop a long running process (LRP)!\n\n' + \
-        '(c) 2022. CloudOpti Ltd. All rights reserved.')
+        '(c) 2023. CloudOpti Ltd. All rights reserved.')
     st.sidebar.markdown('---')
 
 

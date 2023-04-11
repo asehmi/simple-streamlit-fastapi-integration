@@ -6,7 +6,10 @@ import uvicorn
 
 from lrp_fastapi_wrapper import FastAPI_Wrapper
 
-def stand_up(host='127.0.0.1', port=8000):
+API_HOST='localhost'
+API_PORT=5000
+
+def stand_up(host=API_HOST, port=API_PORT):
     app = FastAPI_Wrapper()
     uvicorn.run(app, host=host, port=port)
 
