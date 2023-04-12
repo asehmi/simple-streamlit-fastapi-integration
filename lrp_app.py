@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, json
 import time
 import requests
 import streamlit as st
@@ -53,26 +53,26 @@ def main():
             st.experimental_rerun()
 
     if state.API_STARTED:
+        c1, _, c3 = st.columns([1,1,4])
+        with c1:
+            if st.button('👋 Hello'):
+                resp = requests.get(f'{API_BASE_URL}/hello')
+                st.json(json.loads(resp.text))
+        with c3:
+            if st.button('🔥 Shutdown LRP'):
+                requests.get(f'{API_BASE_URL}/shutdown')
+                state.API_STARTED = False
+                st.experimental_rerun()
+
         st.markdown(f'''
-            The LRP API is running. If you\'d like to terminate the LRP click the button below.
-            ### Links to API docs (local environment only!)
+            The LRP API is running. If you\'d like to terminate the LRP click the Shutdown button above.
+            ### Links to API docs (works in localhost environment only!)
             - [**http://{API_HOST}:{API_PORT}/docs**](http://{API_HOST}:{API_PORT}/docs)
             - [**http://{API_HOST}:{API_PORT}/redoc**](http://{API_HOST}:{API_PORT}/redoc)
         ''')
-        st.markdown('### Embedded API docs (local environment only!)')
-        components.iframe(f'http://{API_HOST}:{API_PORT}/docs', height=600, scrolling=True)
-        components.iframe(f'http://{API_HOST}:{API_PORT}/redoc', height=600, scrolling=True)
-
-        if st.button('👋 Hello'):
-            resp = requests.get(f'{API_BASE_URL}/hello')
-            st.write(resp.text)
-
-        if st.button('🔥 Shutdown LRP'):
-            requests.get(f'{API_BASE_URL}/shutdown')
-
-            state.API_STARTED = False
-
-            st.experimental_rerun()
+        # st.markdown('### Embedded API docs (works in localhost environment only!)')
+        # components.iframe(f'http://{API_HOST}:{API_PORT}/docs', height=600, scrolling=True)
+        # components.iframe(f'http://{API_HOST}:{API_PORT}/redoc', height=600, scrolling=True)
 
 def sidebar():
     # ABOUT

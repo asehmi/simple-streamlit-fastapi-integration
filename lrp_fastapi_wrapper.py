@@ -8,7 +8,7 @@ import threading
 import psutil
 
 from fastapi import FastAPI
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 CORS_ALLOW_ORIGINS=['http://localhost', 'http://localhost:5000', 'http://localhost:8765', 'http://127.0.0.1:5000']
@@ -58,4 +58,4 @@ class FastAPI_Wrapper(FastAPI):
 
         @self.get("/hello")
         async def hello():
-            return Response(f'>>> Hello @ {dt.datetime.now()} <<<', status_code=200)
+            return JSONResponse({'message': 'Hello', 'time': dt.datetime.now()}, status_code=200)
