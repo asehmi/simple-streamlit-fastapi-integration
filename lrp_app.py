@@ -53,11 +53,11 @@ def main():
             st.experimental_rerun()
 
     if state.API_STARTED:
-        c1, _, c3 = st.columns([1,1,4])
+        c1, _, c3 = st.columns([2,1,2])
         with c1:
             if st.button('👋 Hello'):
                 resp = requests.get(f'{API_BASE_URL}/hello')
-                st.json(json.loads(resp.text))
+                st.json(json.loads(resp.content))
         with c3:
             if st.button('🔥 Shutdown LRP'):
                 requests.get(f'{API_BASE_URL}/shutdown')
@@ -65,8 +65,8 @@ def main():
                 st.experimental_rerun()
 
         st.markdown(f'''
-            The LRP API is running. If you\'d like to terminate the LRP click the Shutdown button above.
-            ### Links to API docs (works in localhost environment only!)
+            `The LRP API is running. To terminate the LRP, click the shutdown button above.`
+            #### Links to API docs (works in localhost environment only!)
             - [**http://{API_HOST}:{API_PORT}/docs**](http://{API_HOST}:{API_PORT}/docs)
             - [**http://{API_HOST}:{API_PORT}/redoc**](http://{API_HOST}:{API_PORT}/redoc)
         ''')

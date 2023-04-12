@@ -58,4 +58,4 @@ class FastAPI_Wrapper(FastAPI):
 
         @self.get("/hello")
         async def hello():
-            return JSONResponse({'message': 'Hello', 'time': dt.datetime.now()}, status_code=200)
+            return JSONResponse({'message': 'Hello', 'time': dt.datetime.now().strftime('%y-%m-%d %H:%M:%S')}, status_code=200)
