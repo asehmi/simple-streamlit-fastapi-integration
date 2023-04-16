@@ -1,4 +1,4 @@
-import os, sys, json
+import os, sys, json, base64
 import time
 import requests
 import streamlit as st
@@ -26,7 +26,7 @@ def main():
     # RUN LRP
     if not state.API_STARTED:
         st.write('To launch your LRP click the button below.')
-        if st.button('\U0001F680 Launch'):
+        if st.button('🚀 Launch'):
 
             import subprocess
             import threading
@@ -53,25 +53,38 @@ def main():
             st.experimental_rerun()
 
     if state.API_STARTED:
-        c1, _, c3 = st.columns([2,1,2])
+        message = {}
+        c1, c2, _, c4 = st.columns([1,1,1,1])
         with c1:
             if st.button('👋 Hello'):
                 resp = requests.get(f'{API_BASE_URL}/hello')
-                st.json(json.loads(resp.content))
-        with c3:
+                message = json.loads(resp.content)
+        with c2:
+            st.json(message)
+        with c4:
             if st.button('🔥 Shutdown LRP'):
                 requests.get(f'{API_BASE_URL}/shutdown')
                 state.API_STARTED = False
                 st.experimental_rerun()
 
         st.markdown(f'''
-            `The LRP API is running. To terminate the LRP, click the shutdown button above.`
-            #### Links to API docs (works in localhost environment only!)
+            #### Notes
+            - `The long running process (LRP) and FastAPI is running.`
+            - `To terminate the LRP, click the Shutdown button above.`
+            - `To invoke the /hello endpoint, click the Hello button above.`
+            #### API doc links
+            `These FastAPI links only work in a localhost environment or if the FastAPI server
+            is configured on an external domain reachable from this browser window!`
             - [**http://{API_HOST}:{API_PORT}/docs**](http://{API_HOST}:{API_PORT}/docs)
             - [**http://{API_HOST}:{API_PORT}/redoc**](http://{API_HOST}:{API_PORT}/redoc)
         ''')
-        # st.markdown('### Embedded API docs (works in localhost environment only!)')
+        # st.markdown('''
+        #     #### Embedded API docs
+        #     `Displays but works only in localhost environment!`
+        # ''')
+        # st.markdown('##### Swagger UI')
         # components.iframe(f'http://{API_HOST}:{API_PORT}/docs', height=600, scrolling=True)
+        # st.markdown('##### Swagger Docs')
         # components.iframe(f'http://{API_HOST}:{API_PORT}/redoc', height=600, scrolling=True)
 
 def sidebar():
